@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: mongo-express
+spec:
+  rules:
+    - host: 165.22.207.88
+      http:
+        - paths: /
+          backend:
+            serviceName: mongo-express-service
+            servicePort: 8081

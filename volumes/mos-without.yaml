@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosqitto-config
+data:
+  mosquitto.conf: |
+    log.dest stdout 
+    log_type all 
+    log_timestamp true 
+    listener 9001
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto-deployment
+  labels:
+    app: mosquito
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquito
+  template:
+    metadata:
+      labels:
+        app: mosquito
+    spec:
+      containers:
+        - name: mosquito
+          image: eclipse-mosquitto
+          ports:
+            - containerPort: 1883
+          volumeMounts:
+            - name: mosquito-config
+              mountPath: /mosquitto/secret
+      volumes:
+        - name: mosquito-config
+          configMap:
+            name: mosqitto-config
